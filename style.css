@@ -6,12 +6,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-image: url(./Background/Weather_Background.jpg);
-  position: fixed;
-  min-width: 100%;
-  min-height: 100%;
-  background-size: cover;
-  background-position: center;
+  background-color: #152f3c;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -71,7 +66,7 @@ hr {
   vertical-align: middle;
   justify-content: center;
   align-content: space-around;
-  width: 90%;
+  width: 100%;
   margin-bottom: 20px;
 }
 
@@ -79,7 +74,7 @@ hr {
   display: inline-block;
   padding: 10px;
   margin: 10px;
-  background-color: #373737;
+  background-color: #11252f;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -111,7 +106,7 @@ hr {
   vertical-align: middle;
   justify-content: center;
   align-content: center;
-  width: 90%;
+  width: 100%;
   margin-bottom: 20px;
 }
 
@@ -129,7 +124,7 @@ hr {
   padding: 8px;
   margin-left: 0px;
   margin-right: 0px;
-  background-color: #373737;
+  background-color: #11252f;
   border: none;
   outline: none;
   cursor: pointer;
@@ -152,16 +147,17 @@ hr {
   opacity: 0.4;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
+#logo {
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+  align-content: space-around;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+  margin-top: 50px;
+  margin-bottom: 30px;
 }
 
 .card {
