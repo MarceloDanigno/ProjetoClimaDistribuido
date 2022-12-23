@@ -1,6 +1,7 @@
 import './style.css';
 import { DateTime, Settings } from "luxon";
-import Highcharts from "highcharts/highstock";
+import _ from "lodash";
+import Highcharts, { color } from "highcharts/highstock";
 import Indicators from "highcharts/indicators/indicators.js";
 import Regressions from "highcharts/indicators/regressions.js";
 Indicators(Highcharts);
@@ -41,7 +42,9 @@ function addWeatherEvent(item) {
     const apiURL = `https://api.open-meteo.com/v1/forecast?latitude=` + event.currentTarget.dataset.lat + `&longitude=` + event.currentTarget.dataset.lon +
     `&hourly=temperature_2m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,apparent_temperature_max,apparent_temperature_min,precipitation_sum,windspeed_10m_max,rain_sum,precipitation_hours&timezone=` + event.currentTarget.dataset.time;
 
-    // Aqui pode ser adicionado um simbolo de loading que deve ser limpado no segundo then (pos:absolute?)
+    // Add loading
+    let loadingTarget = document.getElementById("loadingTarget");
+    loadingTarget.style.display = "block";
 
     // Faz a chamada da API
     fetch(apiURL)
@@ -59,29 +62,31 @@ function addWeatherEvent(item) {
 
         // Cria dados semanais
         weeklyinfo.innerHTML = `
-        <div class="dayTarget" data-idx="0" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data">`
-        + convertDate(weatherData.daily.time[0]) + `</div><div class="dayTarget__data">🌡 ` + parseFloat((weatherData.daily.apparent_temperature_max[0] + weatherData.daily.apparent_temperature_min[0])/2).toFixed(2) +`°C
+        <div class="dayTarget" data-idx="0" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data"><b>`
+        + convertDate(weatherData.daily.time[0]) + `</b></div><div class="dayTarget__data"><b>🌡️</b> ` + parseFloat((weatherData.daily.temperature_2m_max[0] + weatherData.daily.temperature_2m_min[0])/2).toFixed(2) +`°C
         </div></div>
-        <div class="dayTarget" data-idx="1" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data">`
-        + convertDate(weatherData.daily.time[1]) + `</div><div class="dayTarget__data">🌡 ` + parseFloat((weatherData.daily.apparent_temperature_max[1] + weatherData.daily.apparent_temperature_min[1])/2).toFixed(2) +`°C
+        <div class="dayTarget" data-idx="1" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data"><b>`
+        + convertDate(weatherData.daily.time[1]) + `</b></div><div class="dayTarget__data"><b>🌡️</b> ` + parseFloat((weatherData.daily.temperature_2m_max[1] + weatherData.daily.temperature_2m_min[1])/2).toFixed(2) +`°C
         </div></div>
-        <div class="dayTarget" data-idx="2" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data">`
-        + convertDate(weatherData.daily.time[2]) + `</div><div class="dayTarget__data">🌡 ` + parseFloat((weatherData.daily.apparent_temperature_max[2] + weatherData.daily.apparent_temperature_min[2])/2).toFixed(2) +`°C
+        <div class="dayTarget" data-idx="2" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data"><b>`
+        + convertDate(weatherData.daily.time[2]) + `</b></div><div class="dayTarget__data"><b>🌡️</b> ` + parseFloat((weatherData.daily.temperature_2m_max[2] + weatherData.daily.temperature_2m_min[2])/2).toFixed(2) +`°C
         </div></div>
-        <div class="dayTarget" data-idx="3" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data">`
-        + convertDate(weatherData.daily.time[3]) + `</div><div class="dayTarget__data">🌡 ` + parseFloat((weatherData.daily.apparent_temperature_max[3] + weatherData.daily.apparent_temperature_min[3])/2).toFixed(2) +`°C
+        <div class="dayTarget" data-idx="3" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data"><b>`
+        + convertDate(weatherData.daily.time[3]) + `</b></div><div class="dayTarget__data"><b>🌡️</b> ` + parseFloat((weatherData.daily.temperature_2m_max[3] + weatherData.daily.temperature_2m_min[3])/2).toFixed(2) +`°C
         </div></div>
-        <div class="dayTarget" data-idx="4" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data">`
-        + convertDate(weatherData.daily.time[4]) + `</div><div class="dayTarget__data">🌡 ` + parseFloat((weatherData.daily.apparent_temperature_max[4] + weatherData.daily.apparent_temperature_min[4])/2).toFixed(2) +`°C
+        <div class="dayTarget" data-idx="4" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data"><b>`
+        + convertDate(weatherData.daily.time[4]) + `</b></div><div class="dayTarget__data"><b>🌡️</b> ` + parseFloat((weatherData.daily.temperature_2m_max[4] + weatherData.daily.temperature_2m_min[4])/2).toFixed(2) +`°C
         </div></div>
-        <div class="dayTarget" data-idx="5" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data">`
-        + convertDate(weatherData.daily.time[5]) + `</div><div class="dayTarget__data">🌡 ` + parseFloat((weatherData.daily.apparent_temperature_max[5] + weatherData.daily.apparent_temperature_min[5])/2).toFixed(2) +`°C
+        <div class="dayTarget" data-idx="5" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data"><b>`
+        + convertDate(weatherData.daily.time[5]) + `</b></div><div class="dayTarget__data"><b>🌡️</b> ` + parseFloat((weatherData.daily.temperature_2m_max[5] + weatherData.daily.temperature_2m_min[5])/2).toFixed(2) +`°C
         </div></div>
-        <div class="dayTarget" data-idx="6" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data">`
-        + convertDate(weatherData.daily.time[6]) + `</div><div class="dayTarget__data">🌡 ` + parseFloat((weatherData.daily.apparent_temperature_max[6] + weatherData.daily.apparent_temperature_min[6])/2).toFixed(2) +`°C
+        <div class="dayTarget" data-idx="6" data-json=` + JSON.stringify(weatherData) + `> <div class="dayTarget__data"><b>`
+        + convertDate(weatherData.daily.time[6]) + `</b></div><div class="dayTarget__data"><b>🌡️</b> ` + parseFloat((weatherData.daily.temperature_2m_max[6] + weatherData.daily.temperature_2m_min[6])/2).toFixed(2) +`°C
         </div></div>`;
 
-        // Retira o simbolo de loading aqui
+        // Retira o simbolo de loading
+        let loadingTarget = document.getElementById("loadingTarget");
+        loadingTarget.style.display = "none";
 
         // Adciona eventos de click para cada dia, para o usuário ver com mais detalhes
         document
@@ -127,152 +132,187 @@ function addCollapsableEvent(item) {
     // Cria espaço para cada informação
     let dailyinfo = document.getElementById("dailyinfo");
     dailyinfo.innerHTML = `
-    <div class="dataPoint" id="dataPoint__temp">  </div>
-    <div class="dataPoint" id="dataPoint__tempapa">  </div>
-    <div class="dataPoint" id="dataPoint__prep">  </div>
-    <div class="dataPoint" id="dataPoint__wind">  </div>
-    <div class="dataPoint" id="dataPoint__sunrise">  </div>
-    <div class="dataPoint" id="dataPoint__sunset">  </div>
-    <div class="graphPoint" id="graphPoint__temp">  </div>`;
+    <div class="dataContainer"><div class="dataPoint" id="dataPoint__temp">  </div></div>
+    <div class="dataContainer"><div class="dataPoint" id="dataPoint__tempapa">  </div></div>
+    <div class="dataContainer"><div class="dataPoint" id="dataPoint__prep">  </div></div>
+    <div class="dataContainer"><div class="dataPoint" id="dataPoint__wind">  </div></div>
+    <div class="dataContainer"><div class="dataPoint" id="dataPoint__sunrise">  </div></div>
+    <div class="dataContainer"><div class="dataPoint" id="dataPoint__sunset">  </div></div>
+    <div class="graphContainer"><div class="graphPoint" id="graphPoint__temp">  </div></div>`;
 
     // Informação de temperatura
     let temp = document.getElementById("dataPoint__temp");
     let realTemp = parseFloat((weatherInfo.daily.temperature_2m_max[event.currentTarget.dataset.idx] + weatherInfo.daily.temperature_2m_min[event.currentTarget.dataset.idx])/2).toFixed(2)
-    console.log(realTemp);
+    temp.innerHTML = '<div class="dataPoint__infotext"><b>🌡️ ' + realTemp + '°C</b></div>';
     if (realTemp > 30) {
-      temp.innerHTML = "Ta muito quente!";
+      temp.innerHTML += '<div class="dataPoint__infotext">Ta <b>muito quente</b>!</div>';
     } else if (realTemp > 22) {
-      temp.innerHTML = "Ta bem quente!";
+      temp.innerHTML += '<div class="dataPoint__infotext">Ta <b>bem</b> quente!</div>';
     } else if (realTemp > 18) {
-      temp.innerHTML = "Ta perfeito hoje!";
+      temp.innerHTML += '<div class="dataPoint__infotext"><i>Ta perfeito hoje!</i></div>';
     } else if (realTemp > 10) {
-      temp.innerHTML = "Ta um friozinho bom!";
+      temp.innerHTML += '<div class="dataPoint__infotext">Ta um <i>friozinho</i> bom!</div>';
     } else if (realTemp > 0) {
-      temp.innerHTML = "Ta bem frio!";
+      temp.innerHTML += '<div class="dataPoint__infotext">Ta <b>bem</b> frio!</div>';
     } else {
-      temp.innerHTML = "Ta muito frio!";
+      temp.innerHTML += '<div class="dataPoint__infotext">Ta <b>muito frio</b>!</div>';
     }
 
     // Informação de temperatura aparente
     let tempapa = document.getElementById("dataPoint__tempapa");
     let apaTemp = parseFloat((weatherInfo.daily.apparent_temperature_max[event.currentTarget.dataset.idx] + weatherInfo.daily.apparent_temperature_min[event.currentTarget.dataset.idx])/2).toFixed(2)
-    console.log(apaTemp);
     let tempdiff = parseFloat(apaTemp - realTemp).toFixed(2);
+    tempapa.innerHTML = '<div class="dataPoint__infotext"><b>👀 ' + apaTemp + '°C</b></div>';
     if (tempdiff > 5) {
       if (realTemp > 22) {
-        tempapa.innerHTML = "Ta bem mais quente que deveria!";
+        tempapa.innerHTML += '<div class="dataPoint__infotext">Ta <b>bem mais quente que deveria</b>!</div>';
       } else {
-        tempapa.innerHTML = "Mas deu uma esquentada boa!";
+        tempapa.innerHTML += '<div class="dataPoint__infotext">Mas deu uma <b>esquentada boa</b>!</div>';
       }
     } else if (tempdiff < -5) {
       if (realTemp < 18) {
-        tempapa.innerHTML = "Ta bem mais frio que deveria!";
+        tempapa.innerHTML += '<div class="dataPoint__infotext">Ta <b>bem mais frio que deveria</b>!</div>';
       } else {
-        tempapa.innerHTML = "Mas deu uma esfriada boa!";
+        tempapa.innerHTML += '<div class="dataPoint__infotext">Mas deu uma <b>esfriada boa</b>!</div>';
       }
     } else if (tempdiff > 2) {
       if (realTemp > 22) {
-        tempapa.innerHTML = "Ta mais quente que deveria!";
+        tempapa.innerHTML += '<div class="dataPoint__infotext">Ta <b>mais quente</b> que deveria!</div>';
       } else {
-        tempapa.innerHTML = "Mas deu uma esquentadinha!";
+        tempapa.innerHTML += '<div class="dataPoint__infotext">Mas deu uma <b>esquentadinha</b>!</div>';
       }
     } else if (tempdiff < -2) {
       if (realTemp < 18) {
-        tempapa.innerHTML = "Ta mais frio que deveria!";
+        tempapa.innerHTML += '<div class="dataPoint__infotext">Ta <b>mais frio</b> que deveria!</div>';
       } else {
-        tempapa.innerHTML = "Mas deu uma esfriadinha!";
+        tempapa.innerHTML += '<div class="dataPoint__infotext">Mas deu uma <b>esfriadinha</b>!</div>';
       }
     } else {
-      tempapa.innerHTML = "Temperatura ta perto do normal!";
+      tempapa.innerHTML += '<div class="dataPoint__infotext"><i>Temperatura ta perto do normal!</i></div>';
     }
 
     // Informação de temperatura
     let prep = document.getElementById("dataPoint__prep");
     let prepdata = weatherInfo.daily.precipitation_sum[event.currentTarget.dataset.idx];
-    console.log(prepdata);
+    prep.innerHTML = '<div class="dataPoint__infotext"><b>🌧️ ' + prepdata + 'mm</b></div>';
     if (prepdata > 7.4) {
-      prep.innerHTML = "Ta uma chuvarada na rua!";
+      prep.innerHTML += '<div class="dataPoint__infotext">Ta uma <b>chuvarada na rua</b>!</div>';
     } else if (prepdata > 2.5) {
-      prep.innerHTML = "Ta chovendo!";
+      prep.innerHTML += '<div class="dataPoint__infotext">Ta <b>chovendo</b>!</div>';
     } else if (prepdata > 0.1) {
-      prep.innerHTML = "Ta dando uma chuvinha!";
+      prep.innerHTML += '<div class="dataPoint__infotext">Ta danda uma <i>chuvinha</i>!</div>';
     } else {
-      prep.innerHTML = "Ta sem chuva!";
+      prep.innerHTML += '<div class="dataPoint__infotext"><i>Ta sem chuva!</i></div>';
     }
 
     // Informação de vento
     let wind = document.getElementById("dataPoint__wind");
     let winddata = weatherInfo.daily.windspeed_10m_max[event.currentTarget.dataset.idx];
-    console.log(winddata);
+    wind.innerHTML = '<div class="dataPoint__infotext"><b>🌬️ ' + winddata + 'km/h</b></div>';
     if (winddata > 70) {
-      wind.innerHTML = "Perigo!";
+      wind.innerHTML += '<div class="dataPoint__infotext"><b>💀Perigo!💀</b></div>';
     } else if (winddata > 40) {
-      wind.innerHTML = "Ta ventando forte!";
+      wind.innerHTML += '<div class="dataPoint__infotext">Ta <b>ventando forte</b>!</div>';
     } else if (winddata > 25) {
-      wind.innerHTML = "Ta um vento bom!";
+      wind.innerHTML += '<div class="dataPoint__infotext">Ta um <b>vento</b> bom!</div>';
     } else if (winddata > 10) {
-      wind.innerHTML = "Rola vento bom pra surf!";
+      wind.innerHTML += '<div class="dataPoint__infotext">Rola <i>vento bom pra surf</i>!</div>';
     } else if (winddata > 3) {
-      wind.innerHTML = "Ta um ventinho!";
+      wind.innerHTML += '<div class="dataPoint__infotext">Ta um <i>ventinho</i>!</div>';
     } else {
       if (apaTemp > 22) {
-        wind.innerHTML = "Ta calor e ta sem vento ainda!";
+        wind.innerHTML += '<div class="dataPoint__infotext"><b>Ta calor e ta sem vento ainda! 💀</b>!</div>';
       } else {
-        wind.innerHTML = "Vento bem fraco hoje!";
+        wind.innerHTML += '<div class="dataPoint__infotext"><i>Vento bem fraco hoje!</i></div>';
       }
     }
 
-    // Informação de nascer do sol
+    // Informação de nascer do sol 🌄
     Settings.defaultZoneName = weatherInfo.timezone;
     let sunrise = document.getElementById("dataPoint__sunrise");
     let sunrisetime = weatherInfo.daily.sunrise[event.currentTarget.dataset.idx];
     let remoteTime = DateTime.fromISO(sunrisetime);
     let localTime = DateTime.now().setZone(weatherInfo.timezone);
     let timeToSunrise = ((remoteTime.toMillis() - localTime.toMillis())/1000)/60;
-    console.log(timeToSunrise);
-    if (timeToSunrise > 300) {
-      sunrise.innerHTML = "Ta longe do sol nascer!";
-    } else if (timeToSunrise > 60) {
-      sunrise.innerHTML = "Vai demorar um pouco pro sol nascer!";
-    } else if (timeToSunrise > 30) {
-      sunrise.innerHTML = "Ta quase na hora do sol nascer!";
-    } else if (timeToSunrise > 10) {
-      sunrise.innerHTML = "Ta chegando a hora do sol nascer!";
-    } else if (timeToSunrise <= 10 && timeToSunrise >= -10) {
-      sunrise.innerHTML = "Sol ta nascendo!";
+    if (timeToSunrise > 0){
+      sunrise.innerHTML = '<div class="dataPoint__infotext"><b>🌄 em ' + parseFloat(timeToSunrise).toFixed(0) + ' minutos.</b></div>';
     } else {
-      sunrise.innerHTML = "Sol já nasceu!";
+      sunrise.innerHTML = '<div class="dataPoint__infotext"><b>🌄 aconteceu ' + parseFloat(Math.abs(timeToSunrise)).toFixed(0) + ' minutos atrás.</b></div>';
+    }
+    if (timeToSunrise > 300) {
+      sunrise.innerHTML += '<div class="dataPoint__infotext">Ta longe do sol nascer!</div>';
+    } else if (timeToSunrise > 60) {
+      sunrise.innerHTML += '<div class="dataPoint__infotext">Vai demorar <i>um pouco</i> pro sol nascer!</div>';
+    } else if (timeToSunrise > 30) {
+      sunrise.innerHTML += '<div class="dataPoint__infotext">Ta <b>quase na hora</b> do sol nascer!</div>';
+    } else if (timeToSunrise > 10) {
+      sunrise.innerHTML += '<div class="dataPoint__infotext">Ta <b>chegando a hora do sol nascer</b>!</div>';
+    } else if (timeToSunrise <= 10 && timeToSunrise >= -10) {
+      sunrise.innerHTML += '<div class="dataPoint__infotext"><b>Sol ta nascendo!</b></div>';
+    } else {
+      sunrise.innerHTML += '<div class="dataPoint__infotext"><i>Sol já nasceu!</i></div>';
     }
 
-    // Informação de por do sol
+    // Informação de por do sol 🌇
     let sunset = document.getElementById("dataPoint__sunset");
     let sunsettime = weatherInfo.daily.sunset[event.currentTarget.dataset.idx];
     remoteTime = DateTime.fromISO(sunsettime);
     localTime = DateTime.now().setZone(weatherInfo.timezone);
     let timeToSunset = ((remoteTime.toMillis() - localTime.toMillis())/1000)/60;
-    console.log(timeToSunset);
-    if (timeToSunset > 300) {
-      sunset.innerHTML = "Ta longe do sol se por!";
-    } else if (timeToSunset > 60) {
-      sunset.innerHTML = "Vai demorar um pouco pro sol se por!";
-    } else if (timeToSunset > 30) {
-      sunset.innerHTML = "Ta quase na hora do sol se por!";
-    } else if (timeToSunset > 10) {
-      sunset.innerHTML = "Ta chegando a hora do sol se por!";
-    } else if (timeToSunset <= 10 && timeToSunset >= -10) {
-      sunset.innerHTML = "Sol ta se ponde!";
+    if (timeToSunset > 0){
+      sunset.innerHTML = '<div class="dataPoint__infotext"><b>🌇 em ' + parseFloat(timeToSunset).toFixed(0) + ' minutos.</b></div>';
     } else {
-      sunset.innerHTML = "Sol já se pos!";
+      sunset.innerHTML = '<div class="dataPoint__infotext"><b>🌇 aconteceu ' + parseFloat(Math.abs(timeToSunset)).toFixed(0) + ' minutos atrás.</b></div>';
+    }
+    if (timeToSunset > 300) {
+      sunset.innerHTML += '<div class="dataPoint__infotext">Ta longe do sol se por!</div>';
+    } else if (timeToSunset > 60) {
+      sunset.innerHTML += '<div class="dataPoint__infotext">Vai demorar <i>um pouco</i> pro sol se por!</div>';
+    } else if (timeToSunset > 30) {
+      sunset.innerHTML += '<div class="dataPoint__infotext">Ta <b>quase na hora</b> do sol se por!</div>';
+    } else if (timeToSunset > 10) {
+      sunset.innerHTML += '<div class="dataPoint__infotext">Ta <b>chegando a hora do sol se por</b>!</div>';
+    } else if (timeToSunset <= 10 && timeToSunset >= -10) {
+      sunset.innerHTML += '<div class="dataPoint__infotext"><b>Sol ta se pondo!</b></div>';
+    } else {
+      sunset.innerHTML += '<div class="dataPoint__infotext"><i>Sol já se pos!</i></div>';
     }
 
     // Informação da temperatura de toda semana
     let graph = document.getElementById("graphPoint__temp");
-    graph.innerHTML = '<div id="container"></div>';
 
-    Highcharts.stockChart('container', {
+    let yArray = weatherInfo.hourly.temperature_2m;
+    let xArray = new Array(168).fill().map((_, i) => (i+1) - 1);
+    let regressionResult = linearRegression(weatherInfo.hourly.temperature_2m, xArray);
+    let zeroRegression = regressionResult.intercept;
+    let maxRegression = regressionResult.intercept + regressionResult.slope * 167;
+    // y = intercept + slope * x
+
+    if (regressionResult.slope > 0){
+      graph.innerHTML = '<div id="graphPoint__temp-info">A temperatura está <b>aumentando</b>! <s> <a href="https://climate.nasa.gov/evidence/"> Daqui a um ano estará em: ' + parseFloat(weatherInfo.hourly.temperature_2m[0] + regressionResult.slope * 8760).toFixed(2) + '°C!</a></s></div><div id="container"></div>';
+    } else {
+      graph.innerHTML = '<div id="graphPoint__temp-info">A temperatura está <b>diminuindo</b>! <s> <a href="https://climate.nasa.gov/evidence/"> Daqui a um ano estará em: ' + parseFloat(weatherInfo.hourly.temperature_2m[0] + regressionResult.slope * 8760).toFixed(2) + '°C!</a></s></div><div id="container"></div>';
+    }
+
+    // [[date time, value], [date time, value], ...]
+    let timeTempData = _.zip(weatherInfo.hourly.time, weatherInfo.hourly.temperature_2m);
+
+    Highcharts.chart('container', {
+
+        chart: {
+            backgroundColor: '#11252f',
+            style: {
+              color: '#ffffff'
+            }
+        },
 
         title: {
-            text: 'Temp'
+            text: 'Temperatura durante a semana:',
+            style: {
+                color: '#fddd33',
+                fontSize: '24px',
+                fontWeight: 'bold'
+            }
         },
 
         scrollbar: {
@@ -288,7 +328,13 @@ function addCollapsableEvent(item) {
         },
 
         legend: {
-            enabled: true
+            enabled: true,
+            itemStyle: {
+              color: '#ffffff'
+            },
+            style: {
+              color: '#ffffff'
+            }
         },
 
         plotOptions: {
@@ -297,24 +343,91 @@ function addCollapsableEvent(item) {
             }
         },
 
+        xAxis: {
+          crosshair: false,
+          tickLength:0,
+          title: {
+            style: {
+              color: '#ffffff'
+            }
+          },
+          labels: {
+            enabled: false,
+            style: {
+              color: '#ffffff'
+            }
+          },
+          style: {
+            color: '#ffffff'
+          }
+        },
+
+        yAxis: {
+            title: {
+                text: 'Temperatura (°C)',
+                style: {
+                  color: '#ffffff'
+                }
+            },
+            labels: {
+              style: {
+                color: '#ffffff'
+              }
+            },
+            style: {
+              color: '#ffffff'
+            }
+        },
+
         series: [{
             id: 'tempp',
-            name: 'Temperature Celcius',
+            name: 'Temperatura (°C)',
             showInNavigator: false,
-            data: weatherInfo.hourly.temperature_2m
+            lineWidth: 3,
+            data: timeTempData
         }, {
-          type: 'linearRegression',
+          type: 'line',
+          name: 'Tendência da Temperatura',
           linkedTo: 'tempp',
-          zIndex: -1,
-          params: {
-              period: 48
+          color: '#B01A8C',
+          lineWidth: 2,
+          data: [[0, zeroRegression],[167, maxRegression]],
+          marker: {
+            enabled: false
           }
-      }],
-      tooltip: {
-          shared: true,
-          split: false
-      }
-    });
+        }],
+
+        tooltip: {
+            shared: true,
+            split: false
+        }
+  });
 
   });
+}
+
+// Código de regressão linear de terceiros
+function linearRegression(y,x){
+  var lr = {};
+  var n = y.length;
+  var sum_x = 0;
+  var sum_y = 0;
+  var sum_xy = 0;
+  var sum_xx = 0;
+  var sum_yy = 0;
+
+  for (var i = 0; i < y.length; i++) {
+
+      sum_x += x[i];
+      sum_y += y[i];
+      sum_xy += (x[i]*y[i]);
+      sum_xx += (x[i]*x[i]);
+      sum_yy += (y[i]*y[i]);
+  }
+
+  lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+  lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
+  lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+
+  return lr;
 }
