@@ -227,7 +227,7 @@ function addCollapsableEvent(item) {
       }
     }
 
-    // Informação de nascer do sol 🌄
+    // Informação de nascer do sol
     Settings.defaultZoneName = weatherInfo.timezone;
     let sunrise = document.getElementById("dataPoint__sunrise");
     let sunrisetime = weatherInfo.daily.sunrise[event.currentTarget.dataset.idx];
@@ -253,7 +253,7 @@ function addCollapsableEvent(item) {
       sunrise.innerHTML += '<div class="dataPoint__infotext"><i>Sol já nasceu!</i></div>';
     }
 
-    // Informação de por do sol 🌇
+    // Informação de por do sol
     let sunset = document.getElementById("dataPoint__sunset");
     let sunsettime = weatherInfo.daily.sunset[event.currentTarget.dataset.idx];
     remoteTime = DateTime.fromISO(sunsettime);
@@ -281,22 +281,32 @@ function addCollapsableEvent(item) {
     // Informação da temperatura de toda semana
     let graph = document.getElementById("graphPoint__temp");
 
+    // Regressão linear com os dados (y) e um vetor [0, 1, 2, ...] (x)
     let yArray = weatherInfo.hourly.temperature_2m;
     let xArray = new Array(168).fill().map((_, i) => (i+1) - 1);
     let regressionResult = linearRegression(weatherInfo.hourly.temperature_2m, xArray);
+    // Define valor inicial e final para criar a linha no gráfico
+    // y = intercept + slope * x
     let zeroRegression = regressionResult.intercept;
     let maxRegression = regressionResult.intercept + regressionResult.slope * 167;
-    // y = intercept + slope * x
 
+    // Troca mensagem caso a linha for crescente ou decrescente
     if (regressionResult.slope > 0){
       graph.innerHTML = '<div id="graphPoint__temp-info">A temperatura está <b>aumentando</b>! <s> <a href="https://climate.nasa.gov/evidence/"> Daqui a um ano estará em: ' + parseFloat(weatherInfo.hourly.temperature_2m[0] + regressionResult.slope * 8760).toFixed(2) + '°C!</a></s></div><div id="container"></div>';
     } else {
       graph.innerHTML = '<div id="graphPoint__temp-info">A temperatura está <b>diminuindo</b>! <s> <a href="https://climate.nasa.gov/evidence/"> Daqui a um ano estará em: ' + parseFloat(weatherInfo.hourly.temperature_2m[0] + regressionResult.slope * 8760).toFixed(2) + '°C!</a></s></div><div id="container"></div>';
     }
 
+    // Transforma o dado de data de ISO8601 para algo mais legivel para a legenda
     // [[date time, value], [date time, value], ...]
-    let timeTempData = _.zip(weatherInfo.hourly.time, weatherInfo.hourly.temperature_2m);
+    let convertedTime = weatherInfo.hourly.time.map(
+      (time) => {
+        return DateTime.fromISO(time).toLocaleString({ day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}, { locale: 'pt-BR'});
+      }
+    );
+    let timeTempData = _.zip(convertedTime, weatherInfo.hourly.temperature_2m);
 
+    // Cria o gráfico utilizando highcharts
     Highcharts.chart('container', {
 
         chart: {

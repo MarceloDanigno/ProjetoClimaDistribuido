@@ -3,11 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Projeto Distribuidos</title>
+    <title>What's Weather!</title>
   </head>
   <body>
     <div id="contents">
+      <!-- Contents é um flex -- uma coluna de elementos centralizados -->
+
+      <!-- Logo -->
       <img id="logo" src="Background/Weather_Background.jpg" alt="Logo" />
+
+      <!-- Escolha de Cidades predeterminadas. Para adicinar uma nova é necessário atualizar data-lat, data-lon e data-time (timezone) -->
       <div class="info"> Escolha a <div class="yellowInfo">Cidade</div> que deseje consultar o clima! </div>
       <div id="location">
         <div class="locationTarget" data-lat="-32.0332" data-lon="-52.0986" data-time="America%2FSao_Paulo">
@@ -29,13 +34,19 @@
           Sydney
         </div>
       </div>
+
+      <!-- Simbolo de carregamento é mostrado durante a chamada da API -->
       <div class="info" id="loadingTarget" style="display: none;"> <img id="loadingSymbol" align="middle" src="Background/Infinity-1.3s-200px.gif"> </img> </div>
+
+      <!-- Escolha do dia. Div é preenchida após a chamada da API -->
       <div class="info" id="weeklyText" style="display: none;"> Escolha o <div class="yellowInfo">Dia</div> que queira ver mais informações sobre! </div>
-      <div id="weeklyinfo">
-      </div>
-      <div id="dailyinfo">
-      </div>
+      <div id="weeklyinfo"></div>
+
+      <!-- Informações sobre o dia. Div é preenchida após clicar em um dia -->
+      <div id="dailyinfo"></div>
+
       <hr>
+
       <div id="footer">
         <p> <b>What's Weather</b> tem o objetivo de mostrar o clima de uma forma diferente.</p>
         <p> Dados são consolidados em informações rápidas que descrevem como vai estar o dia.</p>
@@ -44,6 +55,7 @@
         <p><i>Jordan Pinho - 81829</i></p>
         <p><i>Marcelo Danigno - 116509</i></p>
       </div>
+
     </div>
     <script type="module" src="/main.js"></script>
   </body>
