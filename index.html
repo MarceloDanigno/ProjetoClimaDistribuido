@@ -12,12 +12,6 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   </head>
   <body>
-    <div class="search-box">
-      <input class="search-txt" type="text" name="" placeholder="Digite uma Cidade">
-      <a class="search-btn" href="#">
-          <i class="fas fa-search"></i>
-      </a>
-    </div>
     <div id="contents">
       <!-- Contents é um flex -- uma coluna de elementos centralizados -->
 
@@ -25,7 +19,20 @@
       <img id="logo" src="Background/Weather_Background.jpg" alt="Logo" />
 
       <!-- Escolha de Cidades predeterminadas. Para adicinar uma nova é necessário atualizar data-lat, data-lon e data-time (timezone) -->
-      <div class="info"> Escolha a <div class="yellowInfo">Cidade</div> que deseje consultar o clima! </div>
+      <div class="info"> Escolha ou procure uma <div class="yellowInfo">Cidade</div> que deseje consultar o clima! </div>
+
+      <!-- Barra de pesquisa -->
+      <div class="search-box">
+        <input class="search-txt" id="search-box-inputtext" type="text" name="" placeholder="Digite uma Cidade">
+        <a class="search-btn">
+            <i class="fas fa-search" id="search-box-click"></i>
+        </a>
+      </div>
+
+      <div class="locationTarget" id="searchLocationTarget" style="display: none;" data-lat="0" data-lon="0" data-time="0">
+        DummyLocation
+      </div>
+
       <div id="location">
         <div class="locationTarget" data-lat="-32.0332" data-lon="-52.0986" data-time="America%2FSao_Paulo">
           Rio Grande

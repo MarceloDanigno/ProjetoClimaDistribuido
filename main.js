@@ -16,9 +16,48 @@ document.addEventListener(
       .forEach((item) => {
         addWeatherEvent(item);
       });
+
+    // Adicionar evento de click para o submit da procura de cidade
+    document
+      .getElementById("search-box-click")
+      .addEventListener("click", (event) => { searchCity(event); });
   },
   false
 );
+
+function searchCity(event) {
+  event.preventDefault();
+  let inputText = document.getElementById("search-box-inputtext").value;
+  //https://geocoding-api.open-meteo.com/v1/search?name={------}&language=pt&count=1
+  const geoapiURL = `https://geocoding-api.open-meteo.com/v1/search?name=` + inputText + `&language=pt&count=1`;
+  fetch(geoapiURL)
+      .then((response) => {
+        // Transforma a resposta em um objeto e manda para o proximo then
+        if (response.status == 400) {
+          throw "Cidade não encontrada";
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (!("results" in data)) {
+          throw "Cidade não encontrada";
+        }
+        // Código normal aqui
+        console.log(data);
+        let newLocationTarget = document.getElementById("searchLocationTarget");
+        newLocationTarget.style.display = "block";
+        newLocationTarget.className = newLocationTarget.className.replace(" active", "");
+        newLocationTarget.innerHTML = data.results[0].name;
+        newLocationTarget.dataset.lat = data.results[0].latitude;
+        newLocationTarget.dataset.lon = data.results[0].longitude;
+        newLocationTarget.dataset.time = data.results[0].timezone;
+      })
+      .catch((error) => {
+        console.error("Falha na chamada da API!");
+        document.getElementById("search-box-inputtext").value = "";
+        document.getElementById("search-box-inputtext").placeholder = "Cidade não encontrada";
+      });
+}
 
 function addWeatherEvent(item) {
   item.addEventListener("click", (event) => {
