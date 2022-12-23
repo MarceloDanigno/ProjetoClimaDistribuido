@@ -10,8 +10,12 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <video autoplay muted plays-inline class="back-video">
+      <source src="/BG_animation_itens/BG_Weather.mp4" type="video/mp4">
+    </video>
     <div class="search-box">
       <input class="search-txt" type="text" name="" placeholder="Digite uma Cidade">
       <a class="search-btn" href="#">
@@ -22,7 +26,7 @@
       <!-- Contents é um flex -- uma coluna de elementos centralizados -->
 
       <!-- Logo -->
-      <img id="logo" src="Background/Weather_Background.jpg" alt="Logo" />
+      <img id="logo" src="/Background/Weather_Background_withoutNothing.jpg" alt="Logo" />
 
       <!-- Escolha de Cidades predeterminadas. Para adicinar uma nova é necessário atualizar data-lat, data-lon e data-time (timezone) -->
       <div class="info"> Escolha a <div class="yellowInfo">Cidade</div> que deseje consultar o clima! </div>
