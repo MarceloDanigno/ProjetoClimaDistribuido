@@ -27,6 +27,11 @@ document.addEventListener(
 
 function searchCity(event) {
   event.preventDefault();
+
+  // Add loading
+  let loadingTargetGeo = document.getElementById("loadingTargetGeo");
+  loadingTargetGeo.style.display = "block";
+
   let inputText = document.getElementById("search-box-inputtext").value;
   //https://geocoding-api.open-meteo.com/v1/search?name={------}&language=pt&count=1
   const geoapiURL = `https://geocoding-api.open-meteo.com/v1/search?name=` + inputText + `&language=pt&count=1`;
@@ -45,6 +50,11 @@ function searchCity(event) {
         // Código normal aqui
         console.log(data);
         let newLocationTarget = document.getElementById("searchLocationTarget");
+
+        // Retira o simbolo de loading
+        let loadingTargetGeo = document.getElementById("loadingTargetGeo");
+        loadingTargetGeo.style.display = "none";
+
         newLocationTarget.style.display = "block";
         newLocationTarget.className = newLocationTarget.className.replace(" active", "");
         newLocationTarget.innerHTML = data.results[0].name;
@@ -56,6 +66,10 @@ function searchCity(event) {
         console.error("Falha na chamada da API!");
         document.getElementById("search-box-inputtext").value = "";
         document.getElementById("search-box-inputtext").placeholder = "Cidade não encontrada";
+
+        // Retira o simbolo de loading
+        let loadingTargetGeo = document.getElementById("loadingTargetGeo");
+        loadingTargetGeo.style.display = "none";
       });
 }
 
@@ -137,6 +151,10 @@ function addWeatherEvent(item) {
       .catch((error) => {
         console.error("Falha na chamada da API!");
         console.error(error);
+
+        // Retira o simbolo de loading
+        let loadingTarget = document.getElementById("loadingTarget");
+        loadingTarget.style.display = "none";
       });
   });
 }
