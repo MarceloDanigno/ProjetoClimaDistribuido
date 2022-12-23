@@ -10,4 +10,6 @@ E abrir um servidor local com o comando:
 
     npm run dev
 
-O Projeto utiliza a API da [Open-Meteo](https://open-meteo.com/en); os parametros possiveis de obter por essa API podem ser visualizados [aqui](https://open-meteo.com/en/docs).
+O Projeto utiliza as APIs de clima e geolacação da [Open-Meteo](https://open-meteo.com/en).
+Parâmetros possiveis de obter por a API de clima podem ser visualizados [aqui](https://open-meteo.com/en/docs).
+Parâmetros possiveis de obter por a API de geolocação podem ser visualizados [aqui](https://open-meteo.com/en/docs/geocoding-api).

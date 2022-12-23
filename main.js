@@ -4,8 +4,10 @@ import _ from "lodash";
 import Highcharts, { color } from "highcharts/highstock";
 import Indicators from "highcharts/indicators/indicators.js";
 import Regressions from "highcharts/indicators/regressions.js";
+import borderRadius from "highcharts-border-radius";
 Indicators(Highcharts);
 Regressions(Highcharts);
+borderRadius(Highcharts);
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -93,7 +95,7 @@ function addWeatherEvent(item) {
 
     // Define chamada da API
     const apiURL = `https://api.open-meteo.com/v1/forecast?latitude=` + event.currentTarget.dataset.lat + `&longitude=` + event.currentTarget.dataset.lon +
-    `&hourly=temperature_2m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,apparent_temperature_max,apparent_temperature_min,precipitation_sum,windspeed_10m_max,rain_sum,precipitation_hours&timezone=` + event.currentTarget.dataset.time;
+    `&hourly=dewpoint_2m,precipitation,rain,temperature_2m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,apparent_temperature_max,apparent_temperature_min,precipitation_sum,windspeed_10m_max,rain_sum,precipitation_hours&timezone=` + event.currentTarget.dataset.time;
 
     // Add loading
     let loadingTarget = document.getElementById("loadingTarget");
@@ -362,6 +364,7 @@ function addCollapsableEvent(item) {
       }
     );
     let timeTempData = _.zip(convertedTime, weatherInfo.hourly.temperature_2m);
+    let prepTempData = _.zip(convertedTime, weatherInfo.hourly.precipitation);
 
     // Cria o gráfico utilizando highcharts
     Highcharts.chart('container', {
@@ -374,11 +377,12 @@ function addCollapsableEvent(item) {
         },
 
         title: {
-            text: 'Temperatura durante a semana:',
+            text: 'Dados da semana:',
             style: {
                 color: '#fddd33',
                 fontSize: '24px',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                fontFamily: 'Calibri'
             }
         },
 
@@ -429,14 +433,16 @@ function addCollapsableEvent(item) {
           }
         },
 
-        yAxis: {
+        yAxis: [{
             title: {
                 text: 'Temperatura (°C)',
                 style: {
                   color: '#ffffff'
                 }
             },
+            opposite: true,
             labels: {
+              format: '{value}°C',
               style: {
                 color: '#ffffff'
               }
@@ -444,24 +450,68 @@ function addCollapsableEvent(item) {
             style: {
               color: '#ffffff'
             }
-        },
+        }, {
+            gridLineWidth: 0,
+            title: {
+                text: 'Precipitação (mm)',
+                style: {
+                  color: '#ffffff'
+                }
+            },
+            labels: {
+                format: '{value} mm',
+                style: {
+                  color: '#ffffff'
+                }
+            },
+            style: {
+              color: '#ffffff'
+            }
+        }],
 
         series: [{
             id: 'tempp',
             name: 'Temperatura (°C)',
             showInNavigator: false,
+            color: '#90ed7d',
             lineWidth: 3,
+            yAxis: 0,
+            zIndex: 2,
+            tooltip: {
+                valueSuffix: '°C'
+            },
             data: timeTempData
         }, {
-          type: 'line',
-          name: 'Tendência da Temperatura',
-          linkedTo: 'tempp',
-          color: '#B01A8C',
-          lineWidth: 2,
-          data: [[0, zeroRegression],[167, maxRegression]],
-          marker: {
-            enabled: false
-          }
+            id: 'prepp',
+            type: 'column',
+            yAxis: 1,
+            zIndex: 1,
+            borderRadiusTopLeft: 5,
+            borderRadiusTopRight: 5,
+            color: '#7cb5ec',
+            borderColor: '#7cb5ec',
+            name: 'Precipitação (mm)',
+            showInNavigator: false,
+            lineWidth: 3,
+            tooltip: {
+                valueSuffix: 'mm'
+            },
+            data: prepTempData
+        }, {
+            type: 'line',
+            name: 'Tendência da Temperatura',
+            yAxis: 0,
+            zIndex: 0,
+            linkedTo: 'tempp',
+            color: '#B01A8C',
+            lineWidth: 2,
+            tooltip: {
+                valueSuffix: '°C'
+            },
+            data: [[0, zeroRegression],[167, maxRegression]],
+            marker: {
+              enabled: false
+            }
         }],
 
         tooltip: {
