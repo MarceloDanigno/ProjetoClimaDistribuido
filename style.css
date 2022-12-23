@@ -4,8 +4,8 @@
   line-height: 24px;
   font-weight: 400;
 
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #16303c;
+  color: rgba(255, 255, 255, 1);
+  background-color: #16303c !important;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,12 +19,13 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
 
 body {
-  background-color: #16303c;
+  background-color: #16303c !important;
   margin-left: 3.5%;
   margin-right: 3.5%;
   margin-top: 1%;
@@ -34,10 +35,8 @@ body {
   min-height: 100vh;
   max-width: 100%;
   overflow-x: hidden;
-  position: relative
+  position: relative;
 }
-
-/* modificações na barra de pesquisa*/
 
 .search-box{
   background: #11252f;
@@ -89,8 +88,6 @@ body {
   padding: 0 6px;
 }
 
-/* modificações fim */
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -108,7 +105,7 @@ hr {
 }
 
 #contents {
-  background-color: #16303c;
+  background-color: #16303c !important;
   display: flex;
   flex-direction: column;
   width: 100%;
