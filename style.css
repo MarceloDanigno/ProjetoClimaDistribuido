@@ -6,7 +6,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #152f3c;
+  background-color: #16303c;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -316,6 +316,17 @@ hr {
   word-wrap: break-word;
   display: inline-block;
   margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.firstInfo {
+  font-weight: 600;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  word-wrap: break-word;
+  display: inline-block;
+  margin-top: 2px;
   margin-bottom: 30px;
 }
 
