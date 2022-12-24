@@ -28,17 +28,20 @@
       <!-- Barra de pesquisa -->
       <div class="search-box">
         <input class="search-txt" id="search-box-inputtext" type="text" name="" placeholder="Digite uma Cidade">
-        <a class="search-btn">
-            <i class="fas fa-search" id="search-box-click"></i>
+        <a class="search-btn" id="search-box-click">
+            <i class="fas fa-search"></i>
         </a>
       </div>
 
+      <!-- Simbolo de carregamento é mostrado durante a chamada da API -->
       <div class="info" id="loadingTargetGeo" style="display: none;"> <img id="loadingSymbol" align="middle" src="./assets/Infinity-1.3s-200px-8290639b.gif"> </img> </div>
 
+      <!-- Localização escondida, que é atualizada depois de utilizar a API de geolocalização -->
       <div class="locationTarget" id="searchLocationTarget" style="display: none;" data-lat="0" data-lon="0" data-time="0">
         DummyLocation
       </div>
 
+      <!-- Lista de cidades pré-determinadas -->
       <div id="location">
         <div class="locationTarget" data-lat="-32.0332" data-lon="-52.0986" data-time="America%2FSao_Paulo">
           Rio Grande
