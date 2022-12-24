@@ -9,6 +9,7 @@ Indicators(Highcharts);
 Regressions(Highcharts);
 borderRadius(Highcharts);
 
+// Executa quando a tela carrega
 document.addEventListener(
   "DOMContentLoaded",
   function () {
@@ -27,15 +28,16 @@ document.addEventListener(
   false
 );
 
+// Função de procurar cidade
 function searchCity(event) {
   event.preventDefault();
 
-  // Add loading
+  // Adiciona o simbolo de carregamento
   let loadingTargetGeo = document.getElementById("loadingTargetGeo");
   loadingTargetGeo.style.display = "block";
 
+  // Pega a cidade escrita e faz a chamada da API
   let inputText = document.getElementById("search-box-inputtext").value;
-  //https://geocoding-api.open-meteo.com/v1/search?name={------}&language=pt&count=1
   const geoapiURL = `https://geocoding-api.open-meteo.com/v1/search?name=` + inputText + `&language=pt&count=1`;
   fetch(geoapiURL)
       .then((response) => {
@@ -46,10 +48,10 @@ function searchCity(event) {
         return response.json();
       })
       .then((data) => {
+        // Verifica se a cidade foi encontrada (se existe algo nas respostas)
         if (!("results" in data)) {
           throw "Cidade não encontrada";
         }
-        // Código normal aqui
         console.log(data);
         let newLocationTarget = document.getElementById("searchLocationTarget");
 
@@ -57,6 +59,7 @@ function searchCity(event) {
         let loadingTargetGeo = document.getElementById("loadingTargetGeo");
         loadingTargetGeo.style.display = "none";
 
+        // Atualiza o HTML dummy de cidade. Esse vai funcionar do mesmo modo que os as outras cidades
         newLocationTarget.style.display = "block";
         newLocationTarget.className = newLocationTarget.className.replace(" active", "");
         newLocationTarget.innerHTML = data.results[0].name;
@@ -65,6 +68,7 @@ function searchCity(event) {
         newLocationTarget.dataset.time = data.results[0].timezone;
       })
       .catch((error) => {
+        // Caso algum erro acontecer, atualiza a mensagem do search box, tira o simbolo de loading e mostra o erro no console
         console.error("Falha na chamada da API!");
         document.getElementById("search-box-inputtext").value = "";
         document.getElementById("search-box-inputtext").placeholder = "Cidade não encontrada";
@@ -75,6 +79,7 @@ function searchCity(event) {
       });
 }
 
+// Função de adicionar evento de click para cada cidade
 function addWeatherEvent(item) {
   item.addEventListener("click", (event) => {
     event.preventDefault();
@@ -97,7 +102,7 @@ function addWeatherEvent(item) {
     const apiURL = `https://api.open-meteo.com/v1/forecast?latitude=` + event.currentTarget.dataset.lat + `&longitude=` + event.currentTarget.dataset.lon +
     `&hourly=dewpoint_2m,precipitation,rain,temperature_2m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,apparent_temperature_max,apparent_temperature_min,precipitation_sum,windspeed_10m_max,rain_sum,precipitation_hours&timezone=` + event.currentTarget.dataset.time;
 
-    // Add loading
+    // Adiciona o simbolo de carregamento
     let loadingTarget = document.getElementById("loadingTarget");
     loadingTarget.style.display = "block";
 
@@ -151,28 +156,29 @@ function addWeatherEvent(item) {
         });
       })
       .catch((error) => {
+        // Caso algum erro acontecer tira o simbolo de loading e mostra o erro no console
         console.error("Falha na chamada da API!");
         console.error(error);
 
-        // Retira o simbolo de loading
         let loadingTarget = document.getElementById("loadingTarget");
         loadingTarget.style.display = "none";
       });
   });
 }
 
+// Função para converter data em formato legível
 function convertDate(date) {
-  // date is in format year-month-day
-  // convert to day MONTH
+  // Converte yy-mm-dd para dd MONTH
   let dateArray = date.split("-");
   let month = dateArray[1];
   let day = dateArray[2];
-  // -1 because months are 0 indexed
+  // -1 pois os meses são indexados em 0
   var convertedMonth = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN",
       "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"][(parseInt(month) - 1)];
   return day + " " + convertedMonth;
 }
 
+// Função para adicionar eventos de click para cada dia
 function addCollapsableEvent(item) {
   item.addEventListener("click", (event) => {
     event.preventDefault();
@@ -200,7 +206,9 @@ function addCollapsableEvent(item) {
     <div class="graphContainer"><div class="graphPoint" id="graphPoint__temp">  </div></div>`;
 
     // Informação de temperatura
+    // Retorna resultados baseados em ser maior ou menor que dados hardcoded
     let temp = document.getElementById("dataPoint__temp");
+    // Faz a média da temperatura máxima e mínima
     let realTemp = parseFloat((weatherInfo.daily.temperature_2m_max[event.currentTarget.dataset.idx] + weatherInfo.daily.temperature_2m_min[event.currentTarget.dataset.idx])/2).toFixed(2)
     temp.innerHTML = '<div class="dataPoint__infotext"><b>🌡️ ' + realTemp + '°C</b></div>';
     if (realTemp > 30) {
@@ -218,7 +226,9 @@ function addCollapsableEvent(item) {
     }
 
     // Informação de temperatura aparente
+    // Retorna resultados baseados em ser maior ou menor que dados hardcoded, também é visto a diferença entre a temperatura real e a aparente
     let tempapa = document.getElementById("dataPoint__tempapa");
+    // Faz a média da temperatura máxima e mínima
     let apaTemp = parseFloat((weatherInfo.daily.apparent_temperature_max[event.currentTarget.dataset.idx] + weatherInfo.daily.apparent_temperature_min[event.currentTarget.dataset.idx])/2).toFixed(2)
     let tempdiff = parseFloat(apaTemp - realTemp).toFixed(2);
     tempapa.innerHTML = '<div class="dataPoint__infotext"><b>👀 ' + apaTemp + '°C</b></div>';
@@ -250,7 +260,8 @@ function addCollapsableEvent(item) {
       tempapa.innerHTML += '<div class="dataPoint__infotext"><i>Temperatura ta perto do normal!</i></div>';
     }
 
-    // Informação de temperatura
+    // Informação de precipitação
+    // Retorna resultados baseados em ser maior ou menor que dados hardcoded
     let prep = document.getElementById("dataPoint__prep");
     let prepdata = weatherInfo.daily.precipitation_sum[event.currentTarget.dataset.idx];
     prep.innerHTML = '<div class="dataPoint__infotext"><b>🌧️ ' + prepdata + 'mm</b></div>';
@@ -265,6 +276,7 @@ function addCollapsableEvent(item) {
     }
 
     // Informação de vento
+    // Retorna resultados baseados em ser maior ou menor que dados hardcoded
     let wind = document.getElementById("dataPoint__wind");
     let winddata = weatherInfo.daily.windspeed_10m_max[event.currentTarget.dataset.idx];
     wind.innerHTML = '<div class="dataPoint__infotext"><b>🌬️ ' + winddata + 'km/h</b></div>';
@@ -287,11 +299,14 @@ function addCollapsableEvent(item) {
     }
 
     // Informação de nascer do sol
+    // Considera que você está na cidade que está sendo consultada
+    // Para isso utiliza DateTime do luxon para tratar o dado ISO da API
     Settings.defaultZoneName = weatherInfo.timezone;
     let sunrise = document.getElementById("dataPoint__sunrise");
     let sunrisetime = weatherInfo.daily.sunrise[event.currentTarget.dataset.idx];
     let remoteTime = DateTime.fromISO(sunrisetime);
     let localTime = DateTime.now().setZone(weatherInfo.timezone);
+    // Pega a diferença do horario da cidade e do horario do nascer do sol em minutos
     let timeToSunrise = ((remoteTime.toMillis() - localTime.toMillis())/1000)/60;
     if (timeToSunrise > 0){
       sunrise.innerHTML = '<div class="dataPoint__infotext"><b>🌄 em ' + parseFloat(timeToSunrise).toFixed(0) + ' minutos.</b></div>';
@@ -313,10 +328,13 @@ function addCollapsableEvent(item) {
     }
 
     // Informação de por do sol
+    // Considera que você está na cidade que está sendo consultada
+    // Para isso utiliza DateTime do luxon para tratar o dado ISO da API
     let sunset = document.getElementById("dataPoint__sunset");
     let sunsettime = weatherInfo.daily.sunset[event.currentTarget.dataset.idx];
     remoteTime = DateTime.fromISO(sunsettime);
     localTime = DateTime.now().setZone(weatherInfo.timezone);
+    // Pega a diferença do horario da cidade e do horario do por do sol em minutos
     let timeToSunset = ((remoteTime.toMillis() - localTime.toMillis())/1000)/60;
     if (timeToSunset > 0){
       sunset.innerHTML = '<div class="dataPoint__infotext"><b>🌇 em ' + parseFloat(timeToSunset).toFixed(0) + ' minutos.</b></div>';
